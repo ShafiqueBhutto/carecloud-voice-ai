@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import Column, Date, DateTime, String
-from sqlalchemy.dialects.sqlite import CHAR
+from sqlalchemy.dialects.postgresql import UUID
 
 from .database import Base
 
@@ -11,9 +11,9 @@ class Patient(Base):
     __tablename__ = "patients"
 
     patient_id = Column(
-        CHAR(36),
+        UUID(as_uuid=True),
         primary_key=True,
-        default=lambda: str(uuid.uuid4())
+        default=uuid.uuid4
     )
 
     first_name = Column(String(50), nullable=False)
@@ -46,16 +46,16 @@ class Patient(Base):
     emergency_contact_phone = Column(String(10), nullable=True)
 
     created_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         nullable=False
     )
 
     updated_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False
     )
 
-    deleted_at = Column(DateTime, nullable=True)
+    deleted_at = Column(DateTime(timezone=True), nullable=True)
